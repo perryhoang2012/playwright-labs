@@ -1,0 +1,26 @@
+name: Boolean Tests
+
+on:
+  schedule:
+    - cron: "0 16 * * *" # Runs at 4 PM every day
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Boolean Tests
+        run: yarn test:boolean

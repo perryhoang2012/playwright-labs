@@ -1,0 +1,26 @@
+name: Empty Test
+
+on:
+  schedule:
+    - cron: "0 15 * * *" # Runs at 2 PM every day
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Empty Test
+        run: yarn test:empty

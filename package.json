@@ -1,0 +1,16 @@
+{
+  "name": "freelance",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.53.0",
+    "@types/node": "^24.0.1"
+  },
+  "scripts": {
+    "test:basic": "playwright test tests/basic.spec.ts",
+    "test:boolean": "playwright test tests/boolean.spec.ts",
+    "test:empty": "playwright test tests/empty.spec.ts",
+    "test:all": "playwright test"
+  }
+}
