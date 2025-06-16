@@ -1,7 +1,6 @@
+import axios from "axios";
 import { exec } from "child_process";
 import { promisify } from "util";
-
-const execAsync = promisify(exec);
 
 function stripAnsi(str: string) {
   return str.replace(
@@ -38,21 +37,20 @@ export async function sendWebhookNotification(
   }
 
   try {
-    const response = await fetch(
+    const response = await axios.post(
       "https://api.gluegroups.com/webhook/wbh_2yZh5T3LGghnqssM9FiLmuvOaL1/hwOrFjdYaWOrGjCFnRDbMRmCB4SRozGOsOruu89i8UE",
       {
-        method: "POST",
+        target: "grp_2yWp96RAONNHFQYzt90WPX7kQ6t",
+        text: message,
+      },
+      {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          target: "grp_2yWp96RAONNHFQYzt90WPX7kQ6t",
-          text: message,
-        }),
       }
     );
 
-    if (!response.ok) {
+    if (response.status !== 200) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
