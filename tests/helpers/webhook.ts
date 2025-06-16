@@ -1,6 +1,7 @@
 import axios from "axios";
 import { exec } from "child_process";
 import { promisify } from "util";
+import fs from "fs";
 
 function stripAnsi(str: string) {
   return str.replace(
@@ -12,7 +13,8 @@ function stripAnsi(str: string) {
 export async function sendWebhookNotification(
   testName: string,
   status: "passed" | "failed",
-  error?: Error | string
+  error?: Error | string,
+  htmlContent?: string
 ) {
   let message = "";
 
@@ -37,12 +39,18 @@ export async function sendWebhookNotification(
   }
 
   try {
+    const payload: any = {
+      target: "grp_2yWp96RAONNHFQYzt90WPX7kQ6t",
+      text: message,
+    };
+
+    if (htmlContent) {
+      payload.html = htmlContent;
+    }
+
     const response = await axios.post(
       "https://api.gluegroups.com/webhook/wbh_2yZh5T3LGghnqssM9FiLmuvOaL1/hwOrFjdYaWOrGjCFnRDbMRmCB4SRozGOsOruu89i8UE",
-      {
-        target: "grp_2yWp96RAONNHFQYzt90WPX7kQ6t",
-        text: message,
-      },
+      payload,
       {
         headers: {
           "Content-Type": "application/json",
@@ -57,6 +65,35 @@ export async function sendWebhookNotification(
     console.log(`Webhook notification sent successfully for test: ${testName}`);
   } catch (error) {
     console.error("Failed to send webhook notification:", error);
+    throw error;
+  }
+}
+
+export async function sendHtmlReport(htmlContent: string) {
+  try {
+    const payload = {
+      target: "grp_2yWp96RAONNHFQYzt90WPX7kQ6t",
+      text: "📊 Test Report",
+      html: htmlContent,
+    };
+
+    const response = await axios.post(
+      "https://api.gluegroups.com/webhook/wbh_2yZh5T3LGghnqssM9FiLmuvOaL1/hwOrFjdYaWOrGjCFnRDbMRmCB4SRozGOsOruu89i8UE",
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.status !== 200) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    console.log("HTML report sent successfully");
+  } catch (error) {
+    console.error("Failed to send HTML report:", error);
     throw error;
   }
 }
