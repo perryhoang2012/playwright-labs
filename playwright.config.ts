@@ -22,11 +22,6 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [["html", { open: "always" }]],
   /* Configure projects for major browsers */
-  projects: [
-    {
-      name: "chromium",
-    },
-  ],
 
   outputDir: "test-results",
 });

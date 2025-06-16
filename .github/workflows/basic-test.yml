@@ -19,9 +19,6 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
-
       - name: Run Basic Tests
         id: test
         run: yarn test:basic
