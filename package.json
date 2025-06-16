@@ -11,6 +11,7 @@
     "test:basic": "playwright test tests/basic.spec.ts",
     "test:boolean": "playwright test tests/boolean.spec.ts",
     "test:empty": "playwright test tests/empty.spec.ts",
+    "test:simple": "playwright test tests/simple.spec.ts",
     "test:all": "playwright test"
   }
 }

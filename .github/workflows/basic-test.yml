@@ -23,4 +23,27 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Basic Tests
+        id: test
         run: yarn test:basic
+        continue-on-error: true
+
+      - name: Send Webhook Notification
+        if: always()
+        run: |
+          if [ "${{ steps.test.outcome }}" == "success" ]; then
+            curl -s -X POST \
+              -H "Content-Type: application/json" \
+              -d '{
+                "target": "grp_2yWp96RAONNHFQYzt90WPX7kQ6t",
+                "text": "Basic tests completed successfully!"
+              }' \
+              "https://api.gluegroups.com/webhook/wbh_2yZh5T3LGghnqssM9FiLmuvOaL1/hwOrFjdYaWOrGjCFnRDbMRmCB4SRozGOsOruu89i8UE"
+          else
+            curl -s -X POST \
+              -H "Content-Type: application/json" \
+              -d '{
+                "target": "grp_2yWp96RAONNHFQYzt90WPX7kQ6t",
+                "text": "Basic tests failed!"
+              }' \
+              "https://api.gluegroups.com/webhook/wbh_2yZh5T3LGghnqssM9FiLmuvOaL1/hwOrFjdYaWOrGjCFnRDbMRmCB4SRozGOsOruu89i8UE"
+          fi

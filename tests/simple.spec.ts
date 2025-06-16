@@ -1,10 +1,23 @@
 import { test, expect } from "@playwright/test";
+import { sendWebhookNotification } from "./helpers/webhook";
 
 test("simple test", async () => {
-  expect(1 + 1).toBe(2);
+  try {
+    expect(1 + 1).toBe(3);
+    await sendWebhookNotification("simple test", "passed");
+  } catch (error) {
+    await sendWebhookNotification("simple test", "failed");
+    throw error;
+  }
 });
 
 test("another simple test", async () => {
-  const text = "hello";
-  expect(text).toBe("hello");
+  try {
+    const text = "hello";
+    expect(text).toBe("hello");
+    await sendWebhookNotification("another simple test", "passed");
+  } catch (error) {
+    await sendWebhookNotification("another simple test", "failed");
+    throw error;
+  }
 });
