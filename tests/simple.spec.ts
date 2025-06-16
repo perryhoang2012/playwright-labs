@@ -6,7 +6,8 @@ test("simple test", async () => {
     expect(1 + 1).toBe(3);
     await sendWebhookNotification("simple test", "passed");
   } catch (error) {
-    await sendWebhookNotification("simple test", "failed");
+    console.log(error);
+    await sendWebhookNotification("simple test", "failed", error);
     throw error;
   }
 });
@@ -17,7 +18,7 @@ test("another simple test", async () => {
     expect(text).toBe("hello");
     await sendWebhookNotification("another simple test", "passed");
   } catch (error) {
-    await sendWebhookNotification("another simple test", "failed");
+    await sendWebhookNotification("another simple test", "failed", error);
     throw error;
   }
 });
