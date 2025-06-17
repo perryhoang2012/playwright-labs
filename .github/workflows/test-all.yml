@@ -29,21 +29,6 @@ jobs:
       - name: Run All Tests
         run: yarn test:all
 
-      - name: Send HTML Report
-        if: always()
-        run: |
-          if [ -f "playwright-report/index.html" ]; then
-            HTML_CONTENT=$(cat playwright-report/index.html)
-            curl -s -X POST \
-              -H "Content-Type: application/json" \
-              -d "{
-                \"target\": \"grp_2yWp96RAONNHFQYzt90WPX7kQ6t\",
-                \"text\": \"📊 Test Report\",
-                \"html\": $(echo $HTML_CONTENT | jq -R -s '.')
-              }" \
-              "https://api.gluegroups.com/webhook/wbh_2yZh5T3LGghnqssM9FiLmuvOaL1/hwOrFjdYaWOrGjCFnRDbMRmCB4SRozGOsOruu89i8UE"
-          fi
-
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}

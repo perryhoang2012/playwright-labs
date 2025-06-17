@@ -23,7 +23,7 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     ["github"],
-    ["html", { attachmentsBaseURL: "https://external-storage.com/" }],
+    ["./tests/my-awesome-reporter.ts", { customOption: "some value" }],
   ],
   /* Configure projects for major browsers */
 

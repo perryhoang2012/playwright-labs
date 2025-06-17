@@ -2,8 +2,8 @@ name: Basic Tests
 
 on:
   schedule:
-    - cron: "0 14 * * *" # Runs at 2 PM every day
-  workflow_dispatch: # Allows manual trigger
+    - cron: "0 14 * * *"
+  workflow_dispatch:
 
 jobs:
   test:
