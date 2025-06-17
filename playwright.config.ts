@@ -1,4 +1,5 @@
 import { defineConfig } from "@playwright/test";
+import MyReporter from "./tests/my-awesome-reporter";
 
 export default defineConfig({
   testDir: "./tests",
@@ -21,10 +22,7 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [
-    ["github"],
-    ["./tests/my-awesome-reporter.ts", { customOption: "some value" }],
-  ],
+  reporter: [["list"], ["./tests/my-awesome-reporter.ts"]],
   /* Configure projects for major browsers */
 
   outputDir: "test-results",

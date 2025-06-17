@@ -10,28 +10,35 @@ function stripAnsi(str: string) {
 export async function sendWebhookNotification(
   testName: string,
   status: "passed" | "failed",
+  summary?: string,
   error?: Error | string,
   htmlContent?: string
 ) {
   let message = "";
 
   if (status === "passed") {
-    message = `✅ Test "${testName}" passed successfully!`;
+    message = `✅ Test "${testName}" passed successfully!\n\n`;
   } else {
     message = `❌ Test "${testName}" failed!\n\n`;
-    if (error) {
-      let errorMsg = "";
-      let stackMsg = "";
-      if (typeof error === "string") {
-        errorMsg = stripAnsi(error).split("\n")[0];
-      } else {
-        errorMsg = stripAnsi(error.message).split("\n")[0];
-        stackMsg = error.stack ? stripAnsi(error.stack) : "";
-      }
-      message += `**Error message:**\n\n${"```"}\n${errorMsg}\n${"```"}\n`;
-      if (stackMsg) {
-        message += `**Stack trace:**\n\n${"```"}\n${stackMsg}\n${"```"}\n`;
-      }
+  }
+
+  // Add summary if provided
+  if (summary) {
+    message += `**Test Summary:**\n${summary}\n\n`;
+  }
+
+  if (status === "failed" && error) {
+    let errorMsg = "";
+    let stackMsg = "";
+    if (typeof error === "string") {
+      errorMsg = stripAnsi(error).split("\n")[0];
+    } else {
+      errorMsg = stripAnsi(error.message).split("\n")[0];
+      stackMsg = error.stack ? stripAnsi(error.stack) : "";
+    }
+    message += `**Error message:**\n\n${"```"}\n${errorMsg}\n${"```"}\n`;
+    if (stackMsg) {
+      message += `**Stack trace:**\n\n${"```"}\n${stackMsg}\n${"```"}\n`;
     }
   }
 

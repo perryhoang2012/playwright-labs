@@ -6,20 +6,18 @@ import type {
   TestResult,
   FullResult,
 } from "@playwright/test/reporter";
+import { sendWebhookNotification } from "./helpers/webhook";
 
 class MyReporter implements Reporter {
   private passedTests = 0;
   private failedTests = 0;
   private skippedTests = 0;
+  private totalTests = 0;
 
-  constructor(options: { customOption?: string } = {}) {
-    console.log(
-      `my-awesome-reporter setup with customOption set to ${options.customOption}`
-    );
-  }
+  constructor() {}
 
   onBegin(config: FullConfig, suite: Suite) {
-    console.log(`Starting the run with ${suite.allTests().length} tests`);
+    this.totalTests = suite.allTests().length;
   }
 
   onTestBegin(test: TestCase) {
@@ -27,8 +25,6 @@ class MyReporter implements Reporter {
   }
 
   onTestEnd(test: TestCase, result: TestResult) {
-    console.log(`Finished test ${test.title}: ${result.status}`);
-
     switch (result.status) {
       case "passed":
         this.passedTests++;
@@ -42,18 +38,29 @@ class MyReporter implements Reporter {
     }
   }
 
-  onEnd(result: FullResult) {
-    const totalTests = this.passedTests + this.failedTests + this.skippedTests;
-
+  async onEnd(result: FullResult) {
     const summary = [
       `✅ Passed: ${this.passedTests}`,
       `❌ Failed: ${this.failedTests}`,
       `⏭️ Skipped: ${this.skippedTests}`,
-      `📊 Total: ${totalTests}`,
+      `📊 Total: ${this.totalTests}`,
     ].join(" | ");
 
-    const message = `🔔 E2E Test Run Complete\nStatus: ${result.status.toUpperCase()}\n${summary}`;
-    console.log(message);
+    try {
+      if (this.failedTests === 0) {
+        await sendWebhookNotification("Test Suite", "passed", summary);
+      } else {
+        await sendWebhookNotification(
+          "Test Suite",
+          "failed",
+          summary,
+          `Failed tests: ${this.failedTests}`
+        );
+      }
+    } catch (error) {
+      console.error("Failed to send webhook notification:", error);
+    }
   }
 }
+
 export default MyReporter;

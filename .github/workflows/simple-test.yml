@@ -27,7 +27,6 @@ jobs:
           echo "Test execution completed with status: $?"
         continue-on-error: true
 
-      - name: Send Webhook Notification
         if: always()
         run: |
           echo "Preparing to send webhook notification..."
