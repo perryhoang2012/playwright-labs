@@ -7,6 +7,43 @@ function stripAnsi(str: string) {
   );
 }
 
+function convertErrorMessage(error: string): string {
+  // Remove ANSI color codes
+  const cleanError = stripAnsi(error);
+
+  // Split into lines and process each line
+  const lines = cleanError.split("\n");
+  const processedLines = lines
+    .map((line) => {
+      // Remove common prefixes and suffixes
+      line = line.replace(/^Error: /, "");
+      line = line.replace(
+        /^expect\(.*\)\.toBe\(.*\) \/\/ Object\.is equality$/,
+        ""
+      );
+      line = line.trim();
+
+      // Skip empty lines
+      if (!line) return null;
+
+      // Format expected/received lines with inline code
+      if (line.startsWith("Expected:")) {
+        const value = line.replace("Expected:", "").trim();
+        return `Expected: \`${value}\``;
+      }
+      if (line.startsWith("Received:")) {
+        const value = line.replace("Received:", "").trim();
+        return `Received: \`${value}\``;
+      }
+
+      return line;
+    })
+    .filter(Boolean);
+
+  // Join lines with proper formatting
+  return processedLines.join("\n");
+}
+
 export async function sendWebhookNotification(
   testName: string,
   status: "passed" | "failed",
@@ -16,34 +53,41 @@ export async function sendWebhookNotification(
 ) {
   let message = "";
 
-  if (status === "passed") {
-    message = `✅ Test "${testName}" passed successfully!\n\n`;
-  } else {
-    message = `❌ Test "${testName}" failed!\n\n`;
-  }
+  // Add status header
+  message +=
+    status === "passed"
+      ? "🎉 **Test Suite Passed Successfully!**\n\n"
+      : "❌ **Test Suite Failed!**\n\n";
 
   // Add summary if provided
   if (summary) {
-    message += `**Test Summary:**\n${summary}\n\n`;
+    message += `📊 **Test Summary:**\n${summary}\n\n`;
   }
 
+  // Add failed test cases details
   if (status === "failed" && error) {
-    let errorMsg = "";
-    let stackMsg = "";
+    message += "🔍 **Failed Test Cases:**\n";
     if (typeof error === "string") {
-      errorMsg = stripAnsi(error).split("\n")[0];
+      message += convertErrorMessage(error);
     } else {
-      errorMsg = stripAnsi(error.message).split("\n")[0];
-      stackMsg = error.stack ? stripAnsi(error.stack) : "";
+      message += convertErrorMessage(error.message);
+      if (error.stack) {
+        message += `\n\n**Stack Trace:**\n\`\`\`\n${stripAnsi(
+          error.stack
+        )}\n\`\`\``;
+      }
     }
-    message += `**Error message:**\n\n${"```"}\n${errorMsg}\n${"```"}\n`;
-    if (stackMsg) {
-      message += `**Stack trace:**\n\n${"```"}\n${stackMsg}\n${"```"}\n`;
-    }
+    message += "\n\n";
+  }
+
+  // Add HTML report link if provided
+  if (htmlContent) {
+    message += "📋 **HTML Report:**\n";
+    message += "A detailed HTML report is available for this test run.\n\n";
   }
 
   try {
-    const payload: any = {
+    const payload = {
       target: "grp_2yWp96RAONNHFQYzt90WPX7kQ6t",
       text: message,
     };

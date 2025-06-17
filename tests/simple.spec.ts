@@ -36,7 +36,7 @@ test("skip test on Windows", async () => {
 test("skip if previous test failed", async () => {
   test.skip(false, "Skipping because previous test failed");
   try {
-    expect(4 + 4).toBe(8);
+    expect(4 + 4).toBe(9);
   } catch (error) {
     throw error;
   }

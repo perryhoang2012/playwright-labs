@@ -13,6 +13,7 @@ class MyReporter implements Reporter {
   private failedTests = 0;
   private skippedTests = 0;
   private totalTests = 0;
+  private failedTestCases: { title: string; error?: string }[] = [];
 
   constructor() {}
 
@@ -20,9 +21,7 @@ class MyReporter implements Reporter {
     this.totalTests = suite.allTests().length;
   }
 
-  onTestBegin(test: TestCase) {
-    console.log(`Starting test ${test.title}`);
-  }
+  onTestBegin(test: TestCase) {}
 
   onTestEnd(test: TestCase, result: TestResult) {
     switch (result.status) {
@@ -31,6 +30,10 @@ class MyReporter implements Reporter {
         break;
       case "failed":
         this.failedTests++;
+        this.failedTestCases.push({
+          title: test.title,
+          error: result.error?.message,
+        });
         break;
       case "skipped":
         this.skippedTests++;
@@ -50,11 +53,18 @@ class MyReporter implements Reporter {
       if (this.failedTests === 0) {
         await sendWebhookNotification("Test Suite", "passed", summary);
       } else {
+        const failedTestsDetails = this.failedTestCases
+          .map(
+            (test) =>
+              `- \`${test.title}\`${test.error ? `\n ${test.error}` : ""}`
+          )
+          .join("\n");
+
         await sendWebhookNotification(
           "Test Suite",
           "failed",
           summary,
-          `Failed tests: ${this.failedTests}`
+          `Failed tests:\n${failedTestsDetails}`
         );
       }
     } catch (error) {
