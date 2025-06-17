@@ -26,27 +26,3 @@ jobs:
           yarn test:simple
           echo "Test execution completed with status: $?"
         continue-on-error: true
-
-        if: always()
-        run: |
-          echo "Preparing to send webhook notification..."
-          if [ "${{ steps.test.outcome }}" == "success" ]; then
-            echo "Tests passed, sending success notification..."
-            curl -v -X POST \
-              -H "Content-Type: application/json" \
-              -d '{
-                "target": "grp_2yWp96RAONNHFQYzt90WPX7kQ6t",
-                "text": "Simple tests completed successfully!"
-              }' \
-              "https://api.gluegroups.com/webhook/wbh_2yZh5T3LGghnqssM9FiLmuvOaL1/hwOrFjdYaWOrGjCFnRDbMRmCB4SRozGOsOruu89i8UE"
-          else
-            echo "Tests failed, sending failure notification..."
-            curl -v -X POST \
-              -H "Content-Type: application/json" \
-              -d '{
-                "target": "grp_2yWp96RAONNHFQYzt90WPX7kQ6t",
-                "text": "Simple tests failed!"
-              }' \
-              "https://api.gluegroups.com/webhook/wbh_2yZh5T3LGghnqssM9FiLmuvOaL1/hwOrFjdYaWOrGjCFnRDbMRmCB4SRozGOsOruu89i8UE"
-          fi
-          echo "Webhook notification sent"
