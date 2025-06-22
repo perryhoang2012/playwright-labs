@@ -1,0 +1,14 @@
+name: Connect to VPN with Tailscale
+
+on:
+  workflow_dispatch:
+
+jobs:
+  vpn-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connect to Tailscale VPN
+        uses: tailscale/github-action@v2
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+          hostname: github-runner-vpn
