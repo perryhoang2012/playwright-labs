@@ -1,10 +1,10 @@
-name: Connect to VPN with Tailscale
+name: Setup VPN via Tailscale
 
 on:
-  workflow_dispatch:
+  workflow_call:
 
 jobs:
-  vpn-test:
+  vpn:
     runs-on: ubuntu-latest
     steps:
       - name: Connect to Tailscale VPN
