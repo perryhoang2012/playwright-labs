@@ -5,11 +5,11 @@ on:
   pull_request:
     branches: [main, master]
 jobs:
-  setup-vpn:
-    uses: ./.github/workflows/vpn.yml
   test:
-    needs: setup-vpn
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Tailscale
+        uses: tailscale/github-action@v3
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
