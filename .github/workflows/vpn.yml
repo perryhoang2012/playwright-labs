@@ -1,14 +1,14 @@
-name: Setup VPN via Tailscale
+# .github/workflows/vpn.yml
+name: Setup VPN
 
 on:
   workflow_call:
 
 jobs:
-  vpn:
+  tailscale:
     runs-on: ubuntu-latest
     steps:
-      - name: Tailscale
+      - name: Connect to Tailscale
         uses: tailscale/github-action@v3
         with:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-          hostname: github-runner-vpn
