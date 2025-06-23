@@ -12,5 +12,5 @@ jobs:
         with:
           oauth-client-id: "kPwKiUhns921CNTRL"
           oauth-secret: "tskey-client-kPwKiUhns921CNTRL-rsXVs8eZDLVpeDXT7bmJMV8ALBRDjZTh"
-          tags: github-action
+          tags: tag:github-action
           version: latest
