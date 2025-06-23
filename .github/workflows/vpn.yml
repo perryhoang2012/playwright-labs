@@ -10,7 +10,7 @@ jobs:
       - name: Tailscale
         uses: tailscale/github-action@v3
         with:
-          oauth-client-id: "kGFr1A2HPx11CNTRL"
-          oauth-secret: "tskey-client-kGFr1A2HPx11CNTRL-YjuNm74kwP8gMoKP8cLPP8NLmts4r14TL"
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:github-action
           version: latest
