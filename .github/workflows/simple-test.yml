@@ -19,6 +19,13 @@ jobs:
         id: "test"
         run: "echo \"Starting simple tests...\"\nyarn test:simple\necho \"Test execution completed with status: $?\"\n"
         continue-on-error: true
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-html-report
+          path: playwright-report/index.html
+          retention-days: 30
       - name: "Send Result Link to GlueGroups Webhook"
         if: "${{ !cancelled() }}"
         env:
