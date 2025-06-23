@@ -10,5 +10,5 @@ jobs:
       - name: Tailscale
         uses: tailscale/github-action@v3
         with:
-          authkey: "tskey-auth-kj4RTHCXf221CNTRL-K2FMfXrZhbRMTwSJdrvfbRFJHnTSb4PL"
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
           hostname: github-runner-vpn
