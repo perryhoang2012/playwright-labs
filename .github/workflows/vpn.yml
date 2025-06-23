@@ -3,6 +3,9 @@ name: Setup VPN
 
 on:
   workflow_call:
+    secrets:
+      TAILSCALE_AUTHKEY:
+        required: true
 
 jobs:
   tailscale:
