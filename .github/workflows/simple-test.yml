@@ -61,5 +61,5 @@ jobs:
             -H "Content-Type: application/json" \
             -d "$(jq -n \
               --arg target "$TARGET_ID" \
-              --arg text "✅ Simple Tests Success.\n📎 [View full report]($ARTIFACT_LINK)" \
+              --arg text "✅ Simple Tests Success. 📎 [View full report]($ARTIFACT_LINK)" \
               '{target: $target, text: $text}')"
