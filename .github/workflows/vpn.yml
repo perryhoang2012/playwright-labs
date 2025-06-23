@@ -8,8 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Connect to Tailscale VPN
-        uses: tailscale/github-action@v2
+        uses: tailscale/github-action@v2.1.1
         with:
           oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
           oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
           hostname: github-runner-vpn
+          tags: tag:github-actions
