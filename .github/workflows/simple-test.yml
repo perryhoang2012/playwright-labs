@@ -1,31 +1,30 @@
-name: Simple Tests
-
-on:
+---
+name: "Simple Tests"
+"on":
   schedule:
-    - cron: "0 15 * * *" # Runs at 3 PM every day
-  workflow_dispatch: # Allows manual trigger
-
+    - cron: "0 15 * * *"
+  workflow_dispatch: null
 jobs:
   setup-vpn:
-    uses: ./.github/workflows/vpn.yml
+    uses: "./.github/workflows/vpn.yml"
   test:
-    needs: setup-vpn
-    runs-on: ubuntu-latest
+    needs: "setup-vpn"
+    runs-on: "ubuntu-latest"
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: "actions/checkout@v4"
+      - name: "Setup Node.js"
+        uses: "actions/setup-node@v4"
         with:
           node-version: "20"
-
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Run Simple Tests
-        id: test
-        run: |
-          echo "Starting simple tests..."
-          yarn test:simple
-          echo "Test execution completed with status: $?"
+      - name: "Install dependencies"
+        run: "yarn install"
+      - name: "Run Simple Tests"
+        id: "test"
+        run: "echo \"Starting simple tests...\"\nyarn test:simple\necho \"Test execution completed with status: $?\"\n"
         continue-on-error: true
+      - name: "Send Result Link to GlueGroups Webhook"
+        if: "${{ !cancelled() }}"
+        env:
+          WEBHOOK_URL: "https://api.gluegroups.com/webhook/wbh_2yZh5T3LGghnqssM9FiLmuvOaL1/hwOrFjdYaWOrGjCFnRDbMRmCB4SRozGOsOruu89i8UE"
+          TARGET_ID: "grp_2yWp96RAONNHFQYzt90WPX7kQ6t"
+        run: "REPORT_URL=\"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"\ncurl -X POST \"$WEBHOOK_URL\" \\\n  -H \"Content-Type: application/json\" \\\n  -d \"$(jq -n \\\n    --arg target \"$TARGET_ID\" \\\n    --arg text \"✅ Simple Tests Success. View full report: $REPORT_URL\" \\\n    '{target: $target, text: $text}')\"\n"
