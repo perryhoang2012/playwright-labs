@@ -33,7 +33,7 @@ test("Get todo API should return todo item /GetTodo", async ({
   request,
 }, testInfo) => {
   const response = await request.get(
-    "https://jsonplaceholder.typicode.com/todos/asdas"
+    "https://jsonplaceholder.typicode.com/todos/"
   );
   const attachmentName = `api-request`;
   testInfo.attach(attachmentName, {

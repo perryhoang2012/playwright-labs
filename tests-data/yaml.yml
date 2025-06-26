@@ -1,0 +1,34 @@
+- name: "Mesh"
+  type: "mesh"
+  requests:
+    - id: mesh-1
+      name: "Create mesh"
+      method: "POST"
+      path: "/api/data/mesh/"
+      body: "meshCreatePayload"
+- name: "System"
+  type: "system"
+  requests:
+    - id: system-1
+      name: "Create system"
+      method: "POST"
+      path: "/api/data/system/"
+      body: "systemCreatePayload"
+- name: "Sources"
+  type: "source"
+  requests:
+    - id: source-1
+      name: "Create Source"
+      method: "POST"
+      path: "/api/data/source/"
+      body: sourceCreatePayload
+    - id: source-2
+      name: "Create Source"
+      method: "POST"
+      path: "/api/data/source/"
+      body: sourceCreatePayload
+    - id: source-3
+      name: "Create Source"
+      method: "POST"
+      path: "/api/data/source/"
+      body: sourceCreatePayload

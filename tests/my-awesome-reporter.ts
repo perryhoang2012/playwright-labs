@@ -6,7 +6,7 @@ import type {
   TestResult,
   FullResult,
 } from "@playwright/test/reporter";
-import { sendWebhookNotification } from "./helpers/webhook";
+import { sendWebhookNotification } from "../helpers/webhook";
 
 class MyReporter implements Reporter {
   private passedTests = 0;
@@ -31,8 +31,6 @@ class MyReporter implements Reporter {
   onTestBegin(test: TestCase) {}
 
   onTestEnd(test: TestCase, result: TestResult) {
-    console.log("test", test);
-    console.log("result", result);
     switch (result.status) {
       case "passed":
         this.passedTests++;
@@ -83,7 +81,6 @@ class MyReporter implements Reporter {
       `📊 Total: ${this.totalTests}`,
     ].join(" | ");
 
-    console.log(this.failedTestCases);
     try {
       if (this.failedTests === 0) {
         await sendWebhookNotification("Test Suite", "passed", summary);

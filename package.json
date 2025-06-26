@@ -13,9 +13,11 @@
     "test:empty": "playwright test tests/empty.spec.ts",
     "test:simple": "playwright test tests/simple.spec.ts",
     "test:api": "playwright test tests/api.spec.ts",
+    "test:main": "playwright test tests/main.spec.ts",
     "test:all": "playwright test"
   },
   "dependencies": {
-    "axios": "^1.10.0"
+    "axios": "^1.10.0",
+    "yaml": "^2.8.0"
   }
 }
